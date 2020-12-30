@@ -1,6 +1,19 @@
+--[[
+	Know Bugs/Issues:
+		- When player ped changed, script no longer works
+]]
+
 ESX = nil
 mask = true
 ped = GetPlayerPed(-1)
+local toggleMask = 244 -- Defines "244" to variable toggleMask (This will be the keybind to toggle the mask on/off - Current Keybind: [M]) 
+
+--===================================================================
+
+--[[
+	In this section, all the current clothing items and textures are defined to variables.
+	Said variables are then used later on in the code (L56-66 & L71).
+]]
 
 drawableFace = GetPedDrawableVariation(ped, 0)
 textureFace = GetPedTextureVariation(ped, 0)
@@ -38,12 +51,22 @@ textureBadge = GetPedTextureVariation(ped, 10)
 drawableTorso2 = GetPedDrawableVariation(ped, 11)
 textureTorso2 = GetPedTextureVariation(ped, 11)
 
+--===================================================================
+
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 Citizen.CreateThread(function()    
 	while true do
 		Citizen.Wait(0)
-		if IsControlJustPressed(1, 244) then 
+		if IsControlJustPressed(1, toggleMask) then -- Checks for a keypress
+
+			--===================================================================
+			
+			--[[
+				In this section, the players clothing is set the it's original excluding the mask.
+				The mask cannot be changed here due to it being the component we are toggling.
+			]]
+
 			SetPedComponentVariation(ped, 0, drawableFace, textureFace, 1)
 			SetPedComponentVariation(ped, 2, drawableHair, textureHair, 1)
 			SetPedComponentVariation(ped, 3, drawableTorso, textureTorso, 1)
@@ -55,11 +78,14 @@ Citizen.CreateThread(function()
 			SetPedComponentVariation(ped, 9, drawableKevlar, textureKevlar, 1)
 			SetPedComponentVariation(ped, 10, drawableBadge, textureBadge, 1)
 			SetPedComponentVariation(ped, 11, drawableTorso2, textureTorso2, 1)
+			
+			--===================================================================
+
 			if mask then
-				SetPedComponentVariation(ped, 1, 0, 0, 1)
+				SetPedComponentVariation(ped, 1, 0, 0, 1) -- Sets mask to no mask
 				mask = false
 			else 
-				SetPedComponentVariation(ped, 1, drawableMask, textureMask, 1)
+				SetPedComponentVariation(ped, 1, drawableMask, textureMask, 1) -- Sets mask to original mask
 				mask = true
 			end
 		end		
